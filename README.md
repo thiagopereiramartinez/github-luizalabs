@@ -8,6 +8,7 @@ O aplicativo utiliza a API do GitHub para buscar repositórios mais populares da
 - Arquitetura **MVVM**
 - **Kotlin Coroutines** para programação reativa
 - Interface desenvolvida com **Jetpack Compose**
+- Paginação de dados e scroll infinito com **Paging 3**
 - Injeção de dependências usando **Hilt**
 - Suporte offline com cache de imagens e dados da API
 - Design baseado em **Material Design 3**

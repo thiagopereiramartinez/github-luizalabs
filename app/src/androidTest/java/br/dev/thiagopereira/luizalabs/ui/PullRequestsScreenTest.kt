@@ -21,6 +21,7 @@ import br.dev.thiagopereira.luizalabs.utils.fromAssets
 import br.dev.thiagopereira.luizalabs.utils.fromAssetsAsList
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before
@@ -71,7 +72,7 @@ class PullRequestsScreenTest {
                 )
             }
 
-            awaitIdle()
+            runBlocking { 500L }
 
             response.forEach { pr ->
                 val key = "prId:${pr.id}"

@@ -3,6 +3,7 @@ package br.dev.thiagopereira.luizalabs.ui.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,7 +50,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                         IconButton(onClick = { navigator.navigateBack() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Voltar"
+                                contentDescription = stringResource(R.string.voltar)
                             )
                         }
                     }
@@ -62,6 +63,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
             navigator.navigateBack()
         }
 
+        val repositoriosLazyListState = rememberLazyListState()
+
         ListDetailPaneScaffold(
             modifier = modifier
                 .fillMaxSize()
@@ -70,7 +73,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
             value = navigator.scaffoldValue,
             listPane = {
                 AnimatedPane {
-                    GitHubRepositoriesScreen { repo ->
+                    GitHubRepositoriesScreen(
+                        listState = repositoriosLazyListState
+                    ) { repo ->
                         navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, repo)
                     }
                 }

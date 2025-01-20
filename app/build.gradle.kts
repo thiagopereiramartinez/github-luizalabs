@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,6 +12,9 @@ plugins {
     alias(libs.plugins.androidx.room)
     id("jacoco-reports")
 }
+
+val localProperties = Properties()
+localProperties.load(FileInputStream(rootProject.file("local.properties")))
 
 android {
     namespace = "br.dev.thiagopereira.luizalabs"
@@ -52,6 +58,7 @@ android {
     }
     buildTypes.forEach { buildType ->
         buildType.buildConfigField("String", "ApiBaseUrl", "${properties["API_BASE_URL"]}")
+        buildType.buildConfigField("String", "GitHubToken", "${localProperties  ["GITHUB_TOKEN"]}")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

@@ -2,12 +2,12 @@ package br.dev.thiagopereira.luizalabs.viewmodel
 
 import androidx.paging.testing.asSnapshot
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import br.dev.thiagopereira.luizalabs.data.PullRequestDataFactory
 import br.dev.thiagopereira.luizalabs.data.RepositorioDataFactory
-import br.dev.thiagopereira.luizalabs.db.dao.RepositorioDao
-import br.dev.thiagopereira.luizalabs.model.GitHubSearchResponse
+import br.dev.thiagopereira.luizalabs.db.dao.PullRequestDao
 import br.dev.thiagopereira.luizalabs.remote.GitHubService
 import br.dev.thiagopereira.luizalabs.repository.GitHubRepository
-import br.dev.thiagopereira.luizalabs.repository.RepositoriosRemoteMediator
+import br.dev.thiagopereira.luizalabs.repository.PullRequestsRemoteMediator
 import br.dev.thiagopereira.luizalabs.utils.CoroutineTestRule
 import br.dev.thiagopereira.luizalabs.utils.mockPaginationHeaders
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class RepositoriosViewModelTest {
+class PullRequestsViewModelTest {
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -44,38 +44,40 @@ class RepositoriosViewModelTest {
     lateinit var gitHubRepository: GitHubRepository
 
     @Inject
-    lateinit var repositorioDao: RepositorioDao
+    lateinit var pullRequestDao: PullRequestDao
 
     @Inject
-    lateinit var remoteMediatorFactory: RepositoriosRemoteMediator.Factory
+    lateinit var remoteMediatorFactory: PullRequestsRemoteMediator.Factory
 
-    private lateinit var viewModel: RepositoriosViewModel
+    private lateinit var viewModel: PullRequestsViewModel
+    private val repositorio = RepositorioDataFactory.create()
+
     private val intCaptor = ArgumentCaptor.forClass(Int::class.java)
 
     @Before
     fun setup() {
         hiltRule.inject()
 
-        viewModel = RepositoriosViewModel(gitHubRepository, remoteMediatorFactory)
+        viewModel = PullRequestsViewModel(gitHubRepository, remoteMediatorFactory, repositorio)
     }
 
     @Test
     fun `Testar carregamento inicial da pagina`() = runTest {
 
-        val repositorios = RepositorioDataFactory.createMany(300).map {
-            it.copy(language = "Kotlin")
-        }.sortedByDescending { it.stargazersCount }
+        val repositorios = PullRequestDataFactory.createMany(300).map {
+            it.copy(repositorioId = repositorio.id)
+        }.sortedByDescending { it.createdAt }
 
         val itemsPerPage = viewModel.pagingConfig.pageSize
 
         val maxPages = repositorios.size / itemsPerPage
 
         wheneverBlocking {
-            gitHubService.searchRepositories(
-                query = anyString(),
+            gitHubService.getPullRequests(
+                owner = anyString(),
+                repo = anyString(),
+                state = anyString(),
                 page = intCaptor.capture(),
-                sort = anyString(),
-                order = anyString(),
                 itemsPerPage = anyInt()
             )
         }.thenAnswer {
@@ -83,20 +85,17 @@ class RepositoriosViewModelTest {
             val nextPage = if (currentPage < maxPages) currentPage + 1 else null
 
             Response.success(
-                GitHubSearchResponse(
-                    totalCount  = repositorios.size,
-                    items = repositorios
-                ), mockPaginationHeaders(nextPage = nextPage)
+                repositorios, mockPaginationHeaders(nextPage = nextPage)
             )
         }
-        val snapshot = viewModel.repositories.asSnapshot {  }
+        val snapshot = viewModel.pullRequests.asSnapshot {  }
 
         assertEquals(repositorios.take(viewModel.pagingConfig.initialLoadSize), snapshot)
     }
 
     @After
     fun tearDown() = runTest {
-        repositorioDao.clearAll()
+        pullRequestDao.clearAll()
     }
 
 }

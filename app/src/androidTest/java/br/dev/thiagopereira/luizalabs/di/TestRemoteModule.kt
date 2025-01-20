@@ -31,7 +31,6 @@ object TestRemoteModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-
     @Provides
     fun provideGitHubService(retrofit: Retrofit) =
         retrofit.create(GitHubService::class.java)

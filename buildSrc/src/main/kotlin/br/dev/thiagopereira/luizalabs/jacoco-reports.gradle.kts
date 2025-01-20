@@ -1,5 +1,4 @@
 import br.dev.thiagopereira.luizalabs.JacocoReportsExtension
-import org.gradle.configurationcache.extensions.capitalized
 
 plugins {
     id("jacoco")
@@ -34,10 +33,16 @@ project.afterEvaluate {
 
     buildTypes.forEach { buildType ->
 
-        val taskName = "jacocoTest${buildType.capitalized()}Report"
+        val taskName = "jacocoTest${
+            buildType
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        }Report"
 
         tasks.register<JacocoReport>(taskName) {
-            dependsOn("test${buildType.capitalized()}UnitTest")
+            dependsOn("test${
+                buildType
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+            }UnitTest")
             group = "coverage"
 
             reports {
@@ -60,7 +65,10 @@ project.afterEvaluate {
 
             val executationTree = fileTree("${project.layout.buildDirectory.get()}") {
                 include(
-                    "jacoco/test${buildType.capitalized()}UnitTest.exec",
+                    "jacoco/test${
+                        buildType
+                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                    }UnitTest.exec",
                     "outputs/code-coverage/connected/*.ec",
                     "outputs/code_coverage/${buildType}AndroidTest/connected/*coverage.ec",
                 )

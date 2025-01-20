@@ -24,9 +24,15 @@ object RemoteModule {
                 }
             )
             .addInterceptor { chain ->
+                val isAuthenticated = BuildConfig.GitHubToken.startsWith("ghp_")
+
                 chain.proceed(
                     chain.request().newBuilder()
-                        .addHeader("Authorization", "Bearer <TOKEN>")
+                        .apply {
+                            if (isAuthenticated) {
+                                addHeader("Authorization", "Bearer ${BuildConfig.GitHubToken}")
+                            }
+                        }
                         .build()
                 )
             }

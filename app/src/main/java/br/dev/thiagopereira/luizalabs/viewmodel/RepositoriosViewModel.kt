@@ -18,11 +18,12 @@ class RepositoriosViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val language = "Kotlin"
-    var pageSize = 30
+
+    val pagingConfig = PagingConfig(pageSize = 30)
 
     @OptIn(ExperimentalPagingApi::class)
     private val _repositories = Pager(
-        config = PagingConfig(pageSize = pageSize),
+        config = pagingConfig,
         remoteMediator = remoteMediatorFactory.create(language)
     ) {
         repository.repositorioPagingSource(language)

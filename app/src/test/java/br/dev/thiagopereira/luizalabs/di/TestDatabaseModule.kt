@@ -37,4 +37,12 @@ object TestDatabaseModule {
     @Singleton
     fun provideRepositorioDao(database: GitHubDatabase) = database.repositorioDao()
 
+    @Provides
+    @Singleton
+    fun provideRemoteKeyDao(database: GitHubDatabase) = database.remoteKeyDao()
+
+    @Provides
+    @Singleton
+    fun provideLastUpdatedDao(database: GitHubDatabase) = database.lastUpdatedDao()
+
 }

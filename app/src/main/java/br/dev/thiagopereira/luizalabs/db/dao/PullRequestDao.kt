@@ -13,9 +13,14 @@ interface PullRequestDao {
     suspend fun upsert(vararg pullRequest: PullRequestEntity)
 
     @Query("""
-        SELECT * FROM pull_requests WHERE repositorioId = :repositorioId
+        SELECT * FROM pull_requests WHERE repositorioId = :repositorioId ORDER BY createdAt DESC
     """)
     fun pagingSource(repositorioId: Long): PagingSource<Int, PullRequestEntity>
+
+    @Query("""
+        DELETE FROM pull_requests WHERE repositorioId = :repositorioId
+    """)
+    suspend fun clear(repositorioId: Long)
 
     @Query("""
         DELETE FROM pull_requests

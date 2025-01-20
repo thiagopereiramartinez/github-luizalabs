@@ -33,4 +33,7 @@ object DatabaseModule {
     @Provides
     fun provideRemoteKeyDao(database: GitHubDatabase): RemoteKeyDao = database.remoteKeyDao()
 
+    @Provides
+    fun provideLastUpdatedDao(database: GitHubDatabase) = database.lastUpdatedDao()
+
 }

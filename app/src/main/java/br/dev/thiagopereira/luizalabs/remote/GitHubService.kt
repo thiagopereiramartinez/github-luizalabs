@@ -22,7 +22,7 @@ interface GitHubService {
     suspend fun getPullRequests(
         @Path("owner") owner: String,
         @Path("repo") repo: String,
-        @Query("state") state: String = "all",
+        @Query("state") state: String = "open",
         @Query("per_page") itemsPerPage: Int = 30,
         @Query("page") page: Int = 1
     ): Response<List<PullRequestEntity>>

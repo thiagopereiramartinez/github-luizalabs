@@ -2,4 +2,6 @@
     <string name="app_name">Teste Técnico - Luiza Labs</string>
     <string name="owner_avatar">Owner avatar</string>
     <string name="github_luiza_labs">GitHub - Luiza Labs</string>
+    <string name="voltar">Voltar</string>
+    <string name="ir_para_o_topo">Ir para o topo</string>
 </resources>

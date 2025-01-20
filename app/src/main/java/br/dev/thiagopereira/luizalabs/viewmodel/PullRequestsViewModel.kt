@@ -21,9 +21,11 @@ class PullRequestsViewModel @AssistedInject constructor(
     @Assisted repository: RepositorioEntity
 ) : ViewModel() {
 
+    val pagingConfig = PagingConfig(pageSize = 30)
+
     @OptIn(ExperimentalPagingApi::class)
     private val _pullRequests = Pager(
-        config = PagingConfig(pageSize = 30),
+        config = pagingConfig,
         remoteMediator = remoteMediatorFactory.create(repository)
     ) {
         gitHubRepository.pullRequestPagingSource(repository)

@@ -12,13 +12,13 @@ interface RemoteKeyDao {
     suspend fun upsert(remoteKey: RemoteKeyEntity)
 
     @Query("""
-        SELECT * FROM remote_keys WHERE query = :query
+        SELECT * FROM remote_keys WHERE entity = :entity AND `query` = :query
     """)
-    suspend fun getRemoteKey(query: String): RemoteKeyEntity
+    suspend fun getRemoteKey(entity: String, query: String): RemoteKeyEntity?
 
     @Query("""
-        DELETE FROM remote_keys WHERE query = :query
+        DELETE FROM remote_keys WHERE entity = :entity AND `query` = :query
     """)
-    suspend fun deleteByQuery(query: String)
+    suspend fun deleteByQuery(entity: String, query: String)
 
 }

@@ -2,8 +2,34 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8f67e6ad8c292bd199478139649d023c",
+    "identityHash": "8b33fb32e32c4fdf3129e7680f677552",
     "entities": [
+      {
+        "tableName": "last_updated",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`entity` TEXT NOT NULL, `lastUpdated` INTEGER NOT NULL, PRIMARY KEY(`entity`))",
+        "fields": [
+          {
+            "fieldPath": "entity",
+            "columnName": "entity",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "entity"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
       {
         "tableName": "pull_requests",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `repositorioId` INTEGER NOT NULL, `title` TEXT NOT NULL, `body` TEXT, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `user_login` TEXT NOT NULL, `user_avatarUrl` TEXT NOT NULL, `links_html_href` TEXT NOT NULL, PRIMARY KEY(`id`))",
@@ -168,8 +194,14 @@
       },
       {
         "tableName": "remote_keys",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`query` TEXT NOT NULL, `nextKey` INTEGER, PRIMARY KEY(`query`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`entity` TEXT NOT NULL, `query` TEXT NOT NULL, `nextKey` INTEGER, PRIMARY KEY(`entity`, `query`))",
         "fields": [
+          {
+            "fieldPath": "entity",
+            "columnName": "entity",
+            "affinity": "TEXT",
+            "notNull": true
+          },
           {
             "fieldPath": "query",
             "columnName": "query",
@@ -186,6 +218,7 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
+            "entity",
             "query"
           ]
         },
@@ -196,7 +229,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8f67e6ad8c292bd199478139649d023c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8b33fb32e32c4fdf3129e7680f677552')"
     ]
   }
 }
